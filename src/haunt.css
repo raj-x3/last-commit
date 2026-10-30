@@ -1,0 +1,299 @@
+/* Haunted theme. Loaded last: it re-colours the design tokens and adds the atmosphere layers.
+   All motion here is transform / opacity only. */
+
+:root {
+  --paper: #0b0e12;
+  --paper-2: #10151b;
+  --surface: #141a21;
+  --ink: #e8ece4;
+  --ink-2: #b9c1ba;
+  --ink-3: #8f9a92;
+  --rule: #232d36;
+  --rule-strong: #3a4753;
+  --green: #6fe0a8;
+  --green-ink: #04140b;
+  --green-wash: #0f241a;
+  --amber: #f0a653;
+  --amber-wash: #2a1d0d;
+  --red: #ff7a6b;
+  --red-wash: #2d1513;
+  --blue: #95b9e6;
+  --blue-wash: #111f2e;
+  --stage-bg: #06080b;
+  --stage-ink: #eef2ea;
+  --stage-ink-2: rgba(238, 242, 234, 0.76);
+  --stage-rule: rgba(238, 242, 234, 0.2);
+  --glow: rgba(111, 224, 168, 0.5);
+  color-scheme: dark;
+}
+
+body {
+  background: var(--paper);
+}
+
+::selection {
+  background: var(--green);
+  color: var(--green-ink);
+}
+
+.masthead {
+  background: rgba(11, 14, 18, 0.92);
+  border-bottom-color: var(--rule-strong);
+}
+
+.wordmark-name {
+  text-shadow: 0 0 18px rgba(111, 224, 168, 0.35);
+}
+
+.btn--light {
+  color: #080b0e;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn--primary:hover {
+    background: #9af0c4;
+    box-shadow: 0 0 22px var(--glow);
+  }
+}
+
+.tag--verified,
+.tag--model,
+.tag--action {
+  border-color: rgba(238, 242, 234, 0.22);
+}
+
+.scroll-progress {
+  background: var(--green);
+  box-shadow: 0 0 10px var(--glow);
+}
+
+/* ---------- Atmosphere (fixed, never blocks input) ---------- */
+
+.atmos {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.fog {
+  position: absolute;
+  width: 90vmax;
+  height: 60vmax;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(160, 200, 190, 0.09), rgba(160, 200, 190, 0));
+  animation: fog-drift 70s ease-in-out infinite alternate;
+}
+
+.fog--a {
+  left: -30vmax;
+  bottom: -26vmax;
+}
+
+.fog--b {
+  right: -34vmax;
+  top: 20vh;
+  animation-duration: 95s;
+  animation-direction: alternate-reverse;
+  background: radial-gradient(closest-side, rgba(150, 140, 200, 0.07), rgba(150, 140, 200, 0));
+}
+
+@keyframes fog-drift {
+  from { transform: translate3d(-6vw, 2vh, 0) scale(1); }
+  to { transform: translate3d(18vw, -5vh, 0) scale(1.12); }
+}
+
+.drifter {
+  position: absolute;
+  left: 0;
+  width: var(--s);
+  opacity: var(--o);
+  animation: drift var(--dur) linear var(--delay) infinite;
+  will-change: transform;
+}
+
+.drifter .ghost {
+  color: #d9efe5;
+}
+
+@keyframes drift {
+  from { transform: translate3d(-20vw, 0, 0); }
+  to { transform: translate3d(120vw, -12vh, 0); }
+}
+
+.lantern {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(111, 224, 168, 0.13), rgba(111, 224, 168, 0.04) 55%, rgba(111, 224, 168, 0));
+  opacity: 0;
+  transform: translate3d(-600px, -600px, 0);
+  transition: opacity 300ms ease;
+  will-change: transform;
+}
+
+.lantern[data-on] {
+  opacity: 1;
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(0, 0, 0, 0.5));
+}
+
+/* ---------- Cobwebs ---------- */
+
+.band,
+.page-hero,
+.footer {
+  position: relative;
+  overflow: hidden;
+}
+
+.band-inner,
+.page-hero > :not(.web),
+.footer > :not(.web) {
+  position: relative;
+  z-index: 1;
+}
+
+.web {
+  position: absolute;
+  top: 0;
+  width: clamp(120px, 20vw, 260px);
+  height: auto;
+  color: rgba(222, 236, 228, 0.3);
+  pointer-events: none;
+  transform-origin: 0 0;
+  animation: web-sway 7s ease-in-out infinite alternate;
+}
+
+.web--tl {
+  left: 0;
+}
+
+.web--tr {
+  right: 0;
+  transform-origin: 100% 0;
+  animation-name: web-sway-r;
+}
+
+@keyframes web-sway {
+  from { transform: rotate(-1.4deg) skewX(0.8deg); }
+  to { transform: rotate(1.4deg) skewX(-0.8deg); }
+}
+
+@keyframes web-sway-r {
+  from { transform: rotate(1.4deg) skewX(-0.8deg); }
+  to { transform: rotate(-1.4deg) skewX(0.8deg); }
+}
+
+/* ---------- Spider on a thread ---------- */
+
+.spider-rig {
+  position: absolute;
+  top: 100%;
+  left: 58%;
+  width: 0;
+  height: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.spider-thread {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 100px;
+  margin-left: -0.5px;
+  background: rgba(222, 236, 228, 0.55);
+  transform-origin: 50% 0;
+  transform: scaleY(0.56);
+}
+
+.spider {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 30px;
+  transform: translate3d(-50%, 56px, 0);
+  margin-top: -3px;
+}
+
+.spider-sway {
+  display: block;
+  transform-origin: 50% 0;
+  animation: spider-sway 3.2s ease-in-out infinite alternate;
+}
+
+.spider-art {
+  display: block;
+  width: 30px;
+  color: #cfd8d2;
+  filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.8));
+}
+
+.spider-legs {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: twitch 2.6s ease-in-out infinite;
+}
+
+@keyframes spider-sway {
+  from { transform: rotate(-6deg); }
+  to { transform: rotate(6deg); }
+}
+
+@keyframes twitch {
+  0%, 82%, 100% { transform: scale(1); }
+  88% { transform: scale(1.08, 0.94); }
+  94% { transform: scale(0.96, 1.04); }
+}
+
+@media (max-width: 899px) {
+  .spider-rig {
+    left: 78%;
+  }
+
+  .pg--b {
+    left: 62%;
+    top: 8%;
+  }
+
+  .pg--a {
+    right: 4%;
+    bottom: 48%;
+  }
+
+  .drifter:nth-child(n + 5) {
+    display: none;
+  }
+}
+
+/* ---------- Reduced motion: still, but still spooky ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .fog,
+  .drifter,
+  .web,
+  .ghost,
+  .hero-word,
+  .spider-sway,
+  .spider-legs {
+    animation: none;
+  }
+
+  .drifter {
+    display: none;
+  }
+
+  .lantern {
+    display: none;
+  }
+}

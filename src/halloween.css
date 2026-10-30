@@ -1,0 +1,680 @@
+/* Halloween layer, the rusted terminal and the closing call to action.
+   Motion is transform / opacity / clip-path only, and everything here is decorative. */
+
+:root {
+  --pumpkin: #ff8a2a;
+  --rust-1: #3a1e0f;
+  --rust-2: #7a3b18;
+  --rust-3: #b8591f;
+}
+
+/* ---------- Floating ghosts and bats (fixed, never block input) ---------- */
+
+.hw {
+  position: fixed;
+  inset: 0;
+  z-index: 21;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.floater {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--s);
+  opacity: var(--o);
+  will-change: transform;
+  animation: roam-a var(--dur) ease-in-out var(--delay) infinite;
+}
+
+.floater--b { animation-name: roam-b; }
+.floater--c { animation-name: roam-c; }
+.floater--d { animation-name: roam-d; }
+
+.floater .ghost {
+  animation: floater-bob 6.5s ease-in-out infinite alternate;
+  color: #dcefe6;
+  filter: drop-shadow(0 0 12px rgba(111, 224, 168, 0.5));
+}
+
+.floater--orange .ghost {
+  color: #f3dcc2;
+  filter: drop-shadow(0 0 12px rgba(214, 120, 50, 0.45));
+}
+
+@keyframes floater-bob {
+  from { transform: translate3d(0, 10px, 0) rotate(-5deg); }
+  to { transform: translate3d(0, -18px, 0) rotate(5deg); }
+}
+
+/* Each path wanders across the whole viewport, so ghosts are never parked in one spot. */
+@keyframes roam-a {
+  0%, 100% { transform: translate3d(6vw, 78vh, 0); }
+  22% { transform: translate3d(38vw, 18vh, 0); }
+  48% { transform: translate3d(82vw, 52vh, 0); }
+  74% { transform: translate3d(56vw, 86vh, 0); }
+}
+
+@keyframes roam-b {
+  0%, 100% { transform: translate3d(88vw, 14vh, 0); }
+  26% { transform: translate3d(48vw, 64vh, 0); }
+  52% { transform: translate3d(10vw, 30vh, 0); }
+  78% { transform: translate3d(34vw, 88vh, 0); }
+}
+
+@keyframes roam-c {
+  0%, 100% { transform: translate3d(48vw, 8vh, 0); }
+  30% { transform: translate3d(90vw, 70vh, 0); }
+  58% { transform: translate3d(22vw, 90vh, 0); }
+  80% { transform: translate3d(4vw, 40vh, 0); }
+}
+
+@keyframes roam-d {
+  0%, 100% { transform: translate3d(70vw, 90vh, 0); }
+  24% { transform: translate3d(8vw, 62vh, 0); }
+  50% { transform: translate3d(44vw, 10vh, 0); }
+  76% { transform: translate3d(92vw, 34vh, 0); }
+}
+
+.bat-lane {
+  position: absolute;
+  left: 0;
+  width: var(--s);
+  animation: bat-cross var(--dur) linear var(--delay) infinite;
+  will-change: transform;
+}
+
+.bat-bob {
+  animation: bat-bob 2.4s ease-in-out infinite alternate;
+}
+
+.bat {
+  display: block;
+  width: 100%;
+  color: #a99fc7;
+  opacity: 0.42;
+  filter: drop-shadow(0 0 6px rgba(160, 130, 220, 0.4));
+}
+
+.bat-wing {
+  transform-box: fill-box;
+  transform-origin: 100% 60%;
+  animation: bat-flap 0.34s ease-in-out infinite alternate;
+}
+
+.bat-wing--r {
+  transform-origin: 0 60%;
+}
+
+@keyframes bat-cross {
+  from { transform: translate3d(-12vw, 0, 0); }
+  to { transform: translate3d(112vw, -6vh, 0); }
+}
+
+@keyframes bat-bob {
+  from { transform: translate3d(0, -16px, 0); }
+  to { transform: translate3d(0, 20px, 0); }
+}
+
+@keyframes bat-flap {
+  from { transform: scaleY(1) rotate(0deg); }
+  to { transform: scaleY(0.45) rotate(-8deg); }
+}
+
+/* ---------- Pumpkins and decorative ghosts inside sections ---------- */
+
+.pumpkin {
+  position: absolute;
+  display: block;
+  width: clamp(64px, 8vw, 112px);
+  pointer-events: none;
+}
+
+.pumpkin svg {
+  position: relative;
+  display: block;
+  width: 100%;
+  filter: saturate(0.8) drop-shadow(0 6px 10px rgba(0, 0, 0, 0.6));
+  opacity: 0.82;
+}
+
+.pumpkin-glow {
+  position: absolute;
+  inset: -30%;
+  background: radial-gradient(closest-side, rgba(200, 110, 40, 0.2), rgba(200, 110, 40, 0));
+  animation: candle 3.4s steps(1, end) infinite;
+}
+
+.pumpkin-face {
+  animation: candle-face 3.4s steps(1, end) infinite;
+}
+
+@keyframes candle {
+  0%, 100% { opacity: 0.85; }
+  18% { opacity: 1; }
+  34% { opacity: 0.7; }
+  52% { opacity: 0.95; }
+  71% { opacity: 0.78; }
+}
+
+@keyframes candle-face {
+  0%, 100% { fill: #e2b46a; }
+  34% { fill: #c98f46; }
+  71% { fill: #d8a25a; }
+}
+
+.deco-pumpkin {
+  bottom: 18px;
+  z-index: 0;
+}
+
+.deco-pumpkin--l { left: clamp(8px, 3vw, 48px); }
+.deco-pumpkin--r { right: clamp(8px, 3vw, 48px); }
+.deco-pumpkin--foot { right: clamp(12px, 4vw, 64px); top: 18px; bottom: auto; width: clamp(48px, 6vw, 84px); }
+
+.deco-ghost {
+  position: absolute;
+  width: clamp(54px, 7vw, 100px);
+  color: #dcefe6;
+  opacity: 0.1;
+  pointer-events: none;
+  z-index: 0;
+  filter: drop-shadow(0 0 14px rgba(111, 224, 168, 0.4));
+  animation: deco-float 7s ease-in-out infinite alternate;
+}
+
+.deco-ghost--l { left: clamp(6px, 4vw, 70px); top: 14%; animation: deco-wander-l 46s ease-in-out infinite; }
+.deco-ghost--r { right: clamp(6px, 4vw, 70px); top: 12%; animation: deco-wander-r 54s ease-in-out -20s infinite; }
+
+@keyframes deco-float {
+  from { transform: translate3d(0, 10px, 0) rotate(-3deg); }
+  to { transform: translate3d(0, -16px, 0) rotate(3deg); }
+}
+
+@keyframes deco-wander-l {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(-3deg); }
+  33% { transform: translate3d(36vw, 24vh, 0) rotate(4deg); }
+  66% { transform: translate3d(70vw, -4vh, 0) rotate(-2deg); }
+}
+
+@keyframes deco-wander-r {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(3deg); }
+  33% { transform: translate3d(-40vw, 28vh, 0) rotate(-4deg); }
+  66% { transform: translate3d(-72vw, 2vh, 0) rotate(2deg); }
+}
+
+.outro .deco-ghost--l { top: 48%; }
+.page-hero .deco-pumpkin { bottom: 14px; }
+.page-hero .deco-ghost { top: 22%; opacity: 0.16; }
+.page-hero { position: relative; overflow: hidden; }
+
+/* ---------- Closing call to action ---------- */
+
+.outro {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  min-height: 62vh;
+  padding: clamp(72px, 10vw, 132px) var(--gutter);
+  text-align: center;
+  background:
+    radial-gradient(50% 60% at 50% 100%, rgba(190, 100, 40, 0.1), transparent 70%),
+    radial-gradient(60% 70% at 50% 0%, rgba(40, 110, 80, 0.2), transparent 70%),
+    var(--stage-bg);
+  color: var(--stage-ink);
+  border-top: 1px solid var(--stage-rule);
+}
+
+.outro-inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+}
+
+.outro .label {
+  color: var(--stage-ink-2);
+}
+
+.outro-title {
+  max-width: 18ch;
+  font-family: var(--serif);
+  font-size: clamp(34px, 6vw, 76px);
+  line-height: 1.04;
+  font-weight: 700;
+  text-shadow: 0 0 34px rgba(111, 224, 168, 0.22);
+}
+
+.outro-text {
+  max-width: 46ch;
+  color: var(--stage-ink-2);
+}
+
+.outro-btn {
+  min-height: 52px;
+  padding: 0 30px;
+  font-size: 17px;
+  animation: outro-pulse 3.2s ease-in-out infinite;
+}
+
+@keyframes outro-pulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(111, 224, 168, 0); }
+  50% { box-shadow: 0 0 28px rgba(111, 224, 168, 0.35); }
+}
+
+/* ---------- The rusted terminal ---------- */
+
+.crt-scene {
+  display: grid;
+  gap: 12px;
+  perspective: 1200px;
+  overflow-x: clip;
+}
+
+.crt-wrap {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  padding: 8px 0 18px;
+}
+
+/* Ghost frames of older terminals rush past the camera: the sense of passing through a series of them. */
+.crt-echo {
+  position: absolute;
+  top: 8px;
+  bottom: 18px;
+  left: 0;
+  right: 0;
+  border: 3px solid var(--rust-3);
+  border-radius: 18px;
+  opacity: 0;
+  pointer-events: none;
+  animation: crt-pass 9s linear infinite;
+}
+
+.crt-echo--b { animation-delay: -3s; }
+.crt-echo--c { animation-delay: -6s; }
+
+@keyframes crt-pass {
+  0% { opacity: 0; transform: scale(0.55); }
+  15% { opacity: 0.32; }
+  100% { opacity: 0; transform: scale(1.9); }
+}
+
+.crt-approach {
+  width: 100%;
+  animation: crt-approach 900ms var(--ease-out) backwards;
+}
+
+@keyframes crt-approach {
+  from { opacity: 0; transform: translate3d(0, 24px, -420px) rotateX(10deg); }
+}
+
+.crt-sway {
+  animation: crt-sway 11s ease-in-out infinite alternate;
+  transform-style: preserve-3d;
+}
+
+@keyframes crt-sway {
+  from { transform: rotateY(-1.8deg) rotateX(0.8deg) translate3d(0, 0, 0); }
+  to { transform: rotateY(1.8deg) rotateX(-0.8deg) translate3d(0, -4px, 22px); }
+}
+
+.crt {
+  position: relative;
+  overflow: hidden;
+  padding: 14px 14px 18px;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(220, 110, 40, 0.55), transparent 34%),
+    radial-gradient(circle at 88% 82%, rgba(190, 80, 25, 0.5), transparent 38%),
+    radial-gradient(circle at 70% 12%, rgba(30, 12, 4, 0.7), transparent 30%),
+    linear-gradient(160deg, var(--rust-3), var(--rust-2) 45%, var(--rust-1));
+  box-shadow:
+    inset 0 0 0 2px rgba(0, 0, 0, 0.5),
+    inset 0 2px 0 rgba(255, 190, 120, 0.25),
+    0 24px 60px rgba(0, 0, 0, 0.65),
+    0 0 50px rgba(184, 89, 31, 0.18);
+  animation: crt-flicker 7s steps(1, end) infinite;
+}
+
+@keyframes crt-flicker {
+  0%, 90%, 93%, 100% { filter: brightness(1); }
+  91% { filter: brightness(0.88); }
+  92% { filter: brightness(1.06); }
+}
+
+.crt-rust {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  mix-blend-mode: multiply;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.crt-rivet {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #d99a62, #5a2c12 70%);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.6);
+}
+
+.crt-rivet--a { top: 7px; left: 9px; }
+.crt-rivet--b { top: 7px; right: 9px; }
+.crt-rivet--c { bottom: 7px; left: 9px; }
+.crt-rivet--d { bottom: 7px; right: 9px; }
+
+.crt-streak {
+  position: absolute;
+  top: 0;
+  width: 5px;
+  background: linear-gradient(to bottom, rgba(120, 50, 14, 0.85), rgba(120, 50, 14, 0));
+  pointer-events: none;
+}
+
+.crt-streak--a { left: 18%; height: 54px; }
+.crt-streak--b { left: 57%; height: 82px; width: 4px; }
+.crt-streak--c { right: 12%; height: 40px; }
+
+.crt-top {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px 10px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  color: #f2cfa6;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+}
+
+.crt-plate {
+  padding: 2px 8px;
+  border: 1px solid rgba(255, 210, 160, 0.45);
+  border-radius: 3px;
+  background: rgba(40, 18, 6, 0.55);
+}
+
+.crt-lamp {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #4a2a14;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.6);
+}
+
+.crt-lamp[data-on] {
+  background: #ff8a2a;
+  box-shadow: 0 0 12px #ff8a2a;
+  animation: lamp 1.3s ease-in-out infinite;
+}
+
+@keyframes lamp {
+  50% { opacity: 0.45; }
+}
+
+.crt-screen {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  padding: 18px 20px 14px;
+  border-radius: 12px / 14px;
+  background: radial-gradient(120% 100% at 50% 40%, #0c1a12, #040806 70%);
+  box-shadow:
+    inset 0 0 40px rgba(0, 0, 0, 0.9),
+    inset 0 0 0 2px #1a0e06,
+    0 1px 0 rgba(255, 200, 140, 0.25);
+  color: #ffb347;
+  text-shadow: 0 0 8px rgba(255, 150, 40, 0.55);
+}
+
+.crt-reel {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.055;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.5;
+  color: #7dffb0;
+  pointer-events: none;
+}
+
+.crt-reel > div {
+  animation: crt-reel 46s linear infinite;
+}
+
+.crt-reel p {
+  white-space: nowrap;
+  padding: 0 20px;
+}
+
+@keyframes crt-reel {
+  to { transform: translate3d(0, -50%, 0); }
+}
+
+.crt-text {
+  position: relative;
+  display: grid;
+  gap: 10px;
+}
+
+.crt-prompt {
+  display: flex;
+  min-width: 0;
+  font-size: 14px;
+  color: #ffc873;
+}
+
+.crt-typed {
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: bottom;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  animation: crt-type 1.4s steps(34, end) backwards;
+}
+
+@keyframes crt-type {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+.crt-lines {
+  display: grid;
+  gap: 2px;
+}
+
+.crt-line {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1.4fr) 92px minmax(0, 2fr) auto;
+  gap: 12px;
+  align-items: baseline;
+  padding: 4px 0;
+  font-size: 13px;
+  color: #b88a4e;
+  transition: color 200ms ease;
+}
+
+.crt-line[data-state="running"] {
+  color: #ffc873;
+}
+
+.crt-line[data-state="done"] {
+  color: #8dffbc;
+  text-shadow: 0 0 8px rgba(125, 255, 176, 0.5);
+}
+
+.crt-line[data-state="empty"],
+.crt-line[data-state="unavailable"] {
+  color: #ffc04d;
+}
+
+.crt-line[data-state="failed"] {
+  color: #ff7a6b;
+  text-shadow: 0 0 8px rgba(255, 90, 70, 0.55);
+}
+
+.crt-line[data-state="running"] .crt-token {
+  animation: crt-blink 0.9s steps(1, end) infinite;
+}
+
+.crt-line[data-state="running"] .crt-cmd {
+  animation: crt-type 0.9s steps(18, end) backwards;
+}
+
+@keyframes crt-blink {
+  50% { opacity: 0.25; }
+}
+
+.crt-state {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.crt-detail {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  opacity: 0.85;
+}
+
+.crt-ms {
+  opacity: 0.7;
+}
+
+.crt-foot {
+  font-size: 12px;
+  color: #b88a4e;
+}
+
+.crt-caret {
+  display: inline-block;
+  width: 8px;
+  height: 14px;
+  margin-left: 6px;
+  vertical-align: -2px;
+  background: #ffb347;
+  animation: crt-blink 1s steps(1, end) infinite;
+}
+
+/* Scanlines, a slowly rolling bar and a vignette, all on one overlay that only translates. */
+.crt-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.22) 0 1px, transparent 1px 3px),
+    radial-gradient(120% 100% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.55));
+}
+
+.crt-scan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -30%;
+  height: 28%;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, rgba(255, 190, 110, 0.07), transparent);
+  animation: crt-roll 6s linear infinite;
+}
+
+@keyframes crt-roll {
+  to { transform: translate3d(0, 450%, 0); }
+}
+
+.crt-ghost {
+  position: absolute;
+  top: -34px;
+  right: 22px;
+  width: 60px;
+  color: #dcefe6;
+  opacity: 0.55;
+  z-index: 0;
+  filter: drop-shadow(0 0 12px rgba(111, 224, 168, 0.6));
+  animation: deco-float 5s ease-in-out infinite alternate;
+}
+
+.crt-web {
+  z-index: 3;
+  width: clamp(90px, 14vw, 150px);
+  color: rgba(240, 220, 200, 0.4);
+}
+
+@media (max-width: 700px) {
+  .crt-line {
+    grid-template-columns: 52px minmax(0, 1fr) auto;
+  }
+  .crt-state {
+    display: none;
+  }
+  .crt-detail {
+    grid-column: 2 / -1;
+  }
+  .crt-ms {
+    grid-column: 3;
+    grid-row: 1;
+  }
+  .floater:nth-of-type(n + 3),
+  .bat-lane:nth-of-type(n + 3) {
+    display: none;
+  }
+  .deco-pumpkin--r {
+    display: none;
+  }
+}
+
+/* ---------- Reduced motion: still, but still themed ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .floater,
+  .bat-lane,
+  .bat-bob,
+  .bat-wing,
+  .pumpkin-glow,
+  .pumpkin-face,
+  .deco-ghost,
+  .floater,
+  .outro-btn,
+  .crt-approach,
+  .crt-sway,
+  .crt,
+  .crt-reel > div,
+  .crt-scan,
+  .crt-typed,
+  .crt-cmd,
+  .crt-token,
+  .crt-caret,
+  .crt-lamp,
+  .crt-ghost {
+    animation: none !important;
+  }
+
+  .bat-lane,
+  .floater {
+    display: none;
+  }
+
+  .crt-echo {
+    display: none;
+  }
+}
+
+/* haunt.css makes footer children position: relative; the pumpkin must stay absolute. */
+.footer > .deco-pumpkin--foot {
+  position: absolute;
+}

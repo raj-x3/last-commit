@@ -1,0 +1,710 @@
+/* Scroll story: introduction, contents, how it works. Motion uses transform and opacity only. */
+
+:root {
+  --stage-bg: #181816;
+  --stage-ink: #f4f1ea;
+  --stage-ink-2: rgba(244, 241, 234, 0.74);
+  --stage-rule: rgba(244, 241, 234, 0.18);
+  --header-h: 58px;
+}
+
+html {
+  scroll-padding-top: var(--header-h);
+}
+
+/* ---------- Content bands ---------- */
+
+.band {
+  background: var(--paper);
+  padding: clamp(64px, 10vw, 120px) var(--gutter);
+}
+
+.band--how {
+  background: var(--paper-2);
+  border-top: 1px solid var(--rule-strong);
+}
+
+.band-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: grid;
+  gap: 36px;
+}
+
+.band-head {
+  display: grid;
+  gap: 12px;
+}
+
+.band-title {
+  max-width: 24ch;
+  font-family: var(--serif);
+  font-size: clamp(28px, 4.2vw, 52px);
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+.band--how .band-title {
+  max-width: 28ch;
+}
+
+.legend {
+  display: grid;
+  gap: 10px;
+  padding: 14px 0;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+.legend .tag {
+  margin-right: 8px;
+}
+
+.rows {
+  display: grid;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 56px minmax(180px, 0.8fr) 1.6fr;
+  gap: 8px 20px;
+  align-items: baseline;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.row-n {
+  color: var(--ink-3);
+}
+
+.row-title {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.row-text {
+  max-width: 60ch;
+  color: var(--ink-2);
+}
+
+/* ---------- How it works ---------- */
+
+.how-steps {
+  position: relative;
+  display: grid;
+  gap: 18px;
+  padding-left: 64px;
+}
+
+.how-line {
+  position: absolute;
+  left: 19px;
+  top: 20px;
+  bottom: 20px;
+  width: 2px;
+  background: var(--rule-strong);
+}
+
+.how-line-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--green);
+  transform-origin: top;
+  transform: scaleY(0);
+}
+
+.how-step {
+  position: relative;
+}
+
+.how-node {
+  position: absolute;
+  left: -64px;
+  top: 8px;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 50%;
+  background: var(--paper-2);
+  color: var(--ink-3);
+  transition:
+    background-color 220ms ease,
+    color 220ms ease,
+    border-color 220ms ease;
+}
+
+.how-step[data-in] .how-node {
+  background: var(--green);
+  border-color: var(--green);
+  color: var(--green-ink);
+}
+
+.how-card {
+  opacity: 0;
+  transform: perspective(900px) rotateX(14deg) translateY(28px);
+  transform-origin: 50% 0;
+  transition:
+    opacity 450ms var(--ease-out),
+    transform 600ms var(--ease-out);
+}
+
+.how-step[data-in] .how-card {
+  opacity: 1;
+  transform: perspective(900px) rotateX(0deg) translateY(0);
+}
+
+.how-card-inner {
+  display: grid;
+  gap: 6px;
+  padding: 18px 20px;
+  border: 1px solid var(--rule-strong);
+  background: var(--surface);
+  transition: transform 140ms var(--ease-out);
+}
+
+.how-card-inner h3 {
+  font-family: var(--serif);
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.how-card-inner p {
+  max-width: 62ch;
+  color: var(--ink-2);
+}
+
+.how-card-inner .how-tech {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--green);
+  overflow-wrap: anywhere;
+}
+
+.band-note {
+  max-width: 70ch;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+/* ---------- Scroll reveals ---------- */
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 450ms var(--ease-out),
+    transform 450ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+
+[data-reveal][data-in] {
+  opacity: 1;
+  transform: none;
+}
+
+.how-step[data-reveal] {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 899px) {
+  .row {
+    grid-template-columns: 40px 1fr;
+  }
+
+  .row-text {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 520px) {
+  .how-steps {
+    padding-left: 48px;
+  }
+
+  .how-line {
+    left: 13px;
+  }
+
+  .how-node {
+    left: -48px;
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+}
+
+.sw {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border: 1px solid currentColor;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  .how-card {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .how-node {
+    background: var(--green);
+    border-color: var(--green);
+    color: var(--green-ink);
+    transition: none;
+  }
+
+  .how-card-inner {
+    transition: none;
+  }
+}
+
+
+/* ---------- Trust line ---------- */
+
+.trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 0;
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--stage-ink-2);
+}
+
+.trust li + li::before {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 10px;
+  margin: 0 14px;
+  vertical-align: -1px;
+  background: var(--stage-rule);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* ---------- Header progress ---------- */
+
+.masthead {
+  position: sticky;
+}
+
+.scroll-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  background: var(--green);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  pointer-events: none;
+}
+
+/* ---------- Signals ---------- */
+
+.band--signals {
+  background: var(--paper-2);
+  border-top: 1px solid var(--rule-strong);
+}
+
+.signal {
+  display: grid;
+  gap: 18px;
+}
+
+.signal-bar {
+  display: flex;
+  gap: 4px;
+  height: 18px;
+}
+
+.signal-seg {
+  flex-basis: 0;
+  min-width: 0;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 700ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 120ms + 150ms);
+}
+
+.signal[data-in] .signal-seg {
+  transform: none;
+}
+
+.signal-seg--green { background: var(--green); }
+.signal-seg--amber { background: var(--amber); }
+.signal-seg--red { background: var(--red); }
+
+.signal-key {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px 24px;
+}
+
+.signal-key li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 10px;
+  align-items: center;
+}
+
+.signal-key .sw--green { background: var(--green); border-color: var(--green); }
+.signal-key .sw--amber { background: var(--amber); border-color: var(--amber); }
+.signal-key .sw--red { background: var(--red); border-color: var(--red); }
+
+.signal-name {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.signal-range {
+  grid-column: 2;
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+.signal-note {
+  max-width: 68ch;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+/* ---------- What gets read ---------- */
+
+.band--read {
+  background: var(--paper);
+}
+
+.figures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  border-top: 1px solid var(--ink);
+  margin-bottom: 56px;
+}
+
+.figure {
+  padding: 22px 20px 20px 0;
+  border-bottom: 1px solid var(--rule);
+  display: grid;
+  gap: 4px;
+  align-content: start;
+}
+
+.figure-n {
+  font-family: var(--serif);
+  font-size: clamp(44px, 6vw, 68px);
+  line-height: 1;
+  font-weight: 700;
+  color: var(--green);
+  font-variant-numeric: tabular-nums;
+}
+
+.figure-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.figure-note {
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+
+.record {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  gap: 32px;
+  align-items: start;
+}
+
+.record-sub {
+  margin-top: 8px;
+  max-width: 34ch;
+  color: var(--ink-2);
+}
+
+.record-card {
+  border: 1px solid var(--rule-strong);
+  background: var(--surface);
+  padding: 8px 22px;
+  border-left: 4px solid var(--green);
+  transition: transform 140ms var(--ease-out);
+}
+
+.record-card dl > div {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.record-card dl > div:last-child {
+  border-bottom: 0;
+}
+
+.record-card dt {
+  font-size: 12px;
+  color: var(--green);
+}
+
+.record-card dd {
+  font-size: 14.5px;
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Safeguards + FAQ ---------- */
+
+.band--safe {
+  background: var(--paper);
+  border-top: 1px solid var(--rule-strong);
+}
+
+.band-inner--split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: clamp(32px, 6vw, 80px);
+  align-items: start;
+}
+
+.ledger-row {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.ledger-row:first-child {
+  border-top: 1px solid var(--ink);
+}
+
+.ledger-row dt {
+  font-family: var(--serif);
+  font-weight: 700;
+}
+
+.ledger-row dd {
+  color: var(--ink-2);
+  font-size: 14.5px;
+}
+
+.faq {
+  border-top: 1px solid var(--ink);
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--rule);
+}
+
+.faq-q {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+  text-align: left;
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.faq-q:active {
+  transform: scale(0.99);
+}
+
+.faq-icon {
+  position: relative;
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+
+.faq-icon::before,
+.faq-icon::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 14px;
+  height: 2px;
+  background: var(--ink);
+  transition: transform 260ms var(--ease-out);
+}
+
+.faq-icon::after {
+  transform: rotate(90deg);
+}
+
+.faq-item[data-open] .faq-icon::after {
+  transform: rotate(0deg);
+}
+
+.faq-a {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    grid-template-rows 260ms var(--ease-out),
+    opacity 200ms var(--ease-out),
+    visibility 0s linear 260ms;
+}
+
+.faq-a > div {
+  overflow: hidden;
+}
+
+.faq-a p {
+  padding: 0 0 16px;
+  max-width: 58ch;
+  color: var(--ink-2);
+  font-size: 14.5px;
+}
+
+.faq-item[data-open] .faq-a {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .faq-q:hover .faq-icon::before,
+  .faq-q:hover .faq-icon::after {
+    background: var(--green);
+  }
+}
+
+/* ---------- Footer ---------- */
+
+.footer {
+  width: auto;
+  margin: 0;
+  padding: clamp(40px, 6vw, 64px) var(--gutter) 28px;
+  border-top: 0;
+  background: var(--stage-bg);
+  color: var(--stage-ink-2);
+  font-size: 14px;
+}
+
+.footer .label {
+  color: var(--stage-ink);
+  margin-bottom: 8px;
+}
+
+.footer-grid {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.4fr 1.4fr 1fr;
+  gap: 32px;
+}
+
+.footer-name {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--stage-ink);
+  margin-bottom: 8px;
+}
+
+.footer-text {
+  max-width: 44ch;
+  margin-bottom: 6px;
+}
+
+.footer-links {
+  display: grid;
+  gap: 6px;
+}
+
+.footer-links a {
+  color: var(--stage-ink-2);
+  text-decoration: none;
+  width: fit-content;
+  transition: color 160ms ease;
+}
+
+.footer-links a:focus-visible {
+  outline: 2px solid var(--stage-ink);
+  outline-offset: 3px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .footer-links a:hover {
+    color: var(--stage-ink);
+  }
+}
+
+.footer-fine {
+  max-width: 1280px;
+  margin: 36px auto 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--stage-rule);
+  font-size: 12.5px;
+}
+
+@media (max-width: 899px) {
+  .record,
+  .band-inner--split,
+  .footer-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ledger-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .signal-seg {
+    transform: none;
+    transition: none;
+  }
+
+  .faq-a,
+  .faq-icon::before,
+  .faq-icon::after {
+    transition: none;
+  }
+
+  .scroll-progress {
+    display: none;
+  }
+}
+
+.band-inner--split .band-head {
+  margin-bottom: 28px;
+}
+
+.band-inner--split .band-title {
+  font-size: clamp(26px, 3.2vw, 38px);
+}
