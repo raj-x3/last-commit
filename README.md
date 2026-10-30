@@ -4,6 +4,9 @@ Last Commit investigates a public GitHub repository. It retrieves verifiable fac
 
 It is meant for understanding unfamiliar or quiet repositories. It never declares a project abandoned because of a missing recent commit: activity categories are date-based heuristics, shown next to the dates they come from.
 
+## Live Demo Link
+https://last-commit-du3q.onrender.com/
+
 ## Pages
 
 - **`/`** is the landing page: a scroll-driven journey, then what the report contains, how activity is read, what gets read, how it works, safeguards and a short FAQ.
